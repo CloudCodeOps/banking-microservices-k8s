@@ -1,0 +1,269 @@
+
+name: Deploy Cloud Bank
+
+# Two jobs, matching the README's "CI/CD (fully automated)" section:
+#   terraform  ->  provisions/updates infra, exposes outputs to `deploy`
+#   deploy     ->  builds & pushes every image, renders k8s manifests
+#                  (sed-substituting the terraform outputs in), syncs the
+#                  app-secrets Secret (SMTP + Groq) from GitHub Actions
+#                  secrets, applies everything, waits for rollouts + ALB.
+#
+# One-time setup (see README "CI/CD" section for the full list):
+#   - The Terraform state bucket + lock table are created automatically by
+#     the "Ensure state bucket + lock table exist" step below on first run -
+#     no manual bootstrap needed for CI. If AWS reports the configured
+#     bucket name as transiently stuck (a recent create/delete on that
+#     exact name), it retries, then falls back to a fresh name and commits
+#     that into main.tf so subsequent runs are stable.
+#     (scripts/bootstrap-state.sh still exists for running terraform by
+#     hand outside of CI.)
+#   - GitHub secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY,
+#     SMTP_USER, SMTP_APP_PASSWORD, GROQ_API_KEY
+
+on:
+  push:
+  #   branches: [main]
+  # workflow_dispatch: {}
+
+env:
+  AWS_REGION: us-east-1
+  NAMESPACE: veerabank
+
+jobs:
+  terraform:
+    name: Terraform apply
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # only needed so this job can commit a fallback bucket name into main.tf if the original one is stuck (see "Ensure state bucket..." step)
+    outputs:
+      ecr_repository_urls: ${{ steps.tf-out.outputs.ecr_repository_urls }}
+      backend_irsa_role_arn: ${{ steps.tf-out.outputs.backend_irsa_role_arn }}
+      sns_user_registered_topic_arn: ${{ steps.tf-out.outputs.sns_user_registered_topic_arn }}
+      transactions_history_api_url: ${{ steps.tf-out.outputs.transactions_history_api_url }}
+      eks_cluster_name: ${{ steps.tf-out.outputs.eks_cluster_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Ensure state bucket + lock table exist
+        # Fixes "S3 bucket does not exist" on a fresh AWS account/first run,
+        # without a separate manual step: read the bucket name straight out
+        # of main.tf's backend block (so CI and any local run always agree
+        # on the same bucket) and create it if it isn't there yet. Safe to
+        # re-run - every call is idempotent.
+        #
+        # S3 occasionally answers create-bucket with "OperationAborted: a
+        # conflicting conditional operation is currently in progress" for a
+        # name that was *just* created or deleted (S3 needs a bit to settle
+        # internally) - that's transient, so this retries a few times
+        # first. If the name is still stuck after that (e.g. genuinely
+        # taken by someone else), it gives up on that name, generates a
+        # fresh one, and commits it into main.tf so every future run uses
+        # the working bucket instead of hitting the same wall.
+        working-directory: terraform
+        run: |
+          set -euo pipefail
+          TABLE=veerabank-terraform-locks
+
+          create_bucket() {
+            local name="$1"
+            if [ "$AWS_REGION" = "us-east-1" ]; then
+              aws s3api create-bucket --bucket "$name" --region "$AWS_REGION"
+            else
+              aws s3api create-bucket --bucket "$name" --region "$AWS_REGION" \
+                --create-bucket-configuration LocationConstraint="$AWS_REGION"
+            fi
+            aws s3api put-bucket-versioning --bucket "$name" --versioning-configuration Status=Enabled
+            aws s3api put-bucket-encryption --bucket "$name" \
+              --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+            aws s3api put-public-access-block --bucket "$name" \
+              --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+          }
+
+          BUCKET=$(grep -oP 'bucket\s+= "\K[^"]+' main.tf)
+
+          if aws s3api head-bucket --bucket "$BUCKET" 2>/dev/null; then
+            echo "State bucket $BUCKET already exists."
+          else
+            echo "State bucket $BUCKET doesn't exist yet - creating it."
+            ok=""
+            for attempt in 1 2 3 4 5; do
+              if create_bucket "$BUCKET"; then ok=1; break; fi
+              echo "create-bucket attempt $attempt failed (likely a transient S3 conflict) - retrying in 10s..."
+              sleep 10
+            done
+
+            if [ -z "$ok" ]; then
+              NEW_BUCKET="veerabank-tfstate-$(aws sts get-caller-identity --query Account --output text)-$(date +%s | tail -c 8)"
+              echo "Giving up on $BUCKET - creating a new bucket instead: $NEW_BUCKET"
+              create_bucket "$NEW_BUCKET"
+              sed -i "s#bucket\s*= \"[^\"]*\"#bucket = \"${NEW_BUCKET}\"#" main.tf
+              BUCKET="$NEW_BUCKET"
+
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git add main.tf
+              git commit -m "chore: point tfstate backend at working bucket $NEW_BUCKET [skip ci]"
+              git push
+            fi
+          fi
+
+          if aws dynamodb describe-table --table-name "$TABLE" --region "$AWS_REGION" >/dev/null 2>&1; then
+            echo "Lock table $TABLE already exists."
+          else
+            echo "Lock table $TABLE doesn't exist yet - creating it."
+            aws dynamodb create-table \
+              --table-name "$TABLE" \
+              --attribute-definitions AttributeName=LockID,AttributeType=S \
+              --key-schema AttributeName=LockID,KeyType=HASH \
+              --billing-mode PAY_PER_REQUEST \
+              --region "$AWS_REGION"
+            aws dynamodb wait table-exists --table-name "$TABLE" --region "$AWS_REGION"
+          fi
+
+      - name: terraform init & apply
+        working-directory: terraform
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Collect outputs
+        id: tf-out
+        working-directory: terraform
+        run: |
+          echo "ecr_repository_urls=$(terraform output -json ecr_repository_urls | jq -c .)" >> "$GITHUB_OUTPUT"
+          echo "backend_irsa_role_arn=$(terraform output -raw backend_irsa_role_arn)" >> "$GITHUB_OUTPUT"
+          echo "sns_user_registered_topic_arn=$(terraform output -raw sns_user_registered_topic_arn)" >> "$GITHUB_OUTPUT"
+          echo "transactions_history_api_url=$(terraform output -raw transactions_history_api_url)" >> "$GITHUB_OUTPUT"
+          echo "eks_cluster_name=$(terraform output -raw eks_cluster_name)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    name: Build, push, deploy
+    needs: terraform
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+      - name: Build & push every image
+        env:
+          ECR_URLS: ${{ needs.terraform.outputs.ecr_repository_urls }}
+        run: |
+          set -euo pipefail
+          echo "$ECR_URLS" | jq -r 'keys[]' | while read -r svc; do
+            url=$(echo "$ECR_URLS" | jq -r --arg s "$svc" '.[$s]')
+            if [ "$svc" = "frontend" ]; then
+              docker build -f frontend/Dockerfile -t "$url:${{ github.sha }}" -t "$url:latest" frontend
+            else
+              docker build -f "backend/services/$svc/Dockerfile" -t "$url:${{ github.sha }}" -t "$url:latest" backend
+            fi
+            docker push "$url:${{ github.sha }}"
+            docker push "$url:latest"
+          done
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region "$AWS_REGION" --name "${{ needs.terraform.outputs.eks_cluster_name }}"
+
+      - name: Render manifests
+        # Same substitutions the README describes doing by hand ("Wire up
+        # the manifests"), scripted: every <ECR_REPO_URL_X> placeholder,
+        # <SNS_USER_REGISTERED_TOPIC_ARN>, <TRANSACTIONS_HISTORY_API_URL>,
+        # and the serviceaccount's IRSA role-arn annotation.
+        env:
+          ECR_URLS: ${{ needs.terraform.outputs.ecr_repository_urls }}
+          IRSA_ROLE_ARN: ${{ needs.terraform.outputs.backend_irsa_role_arn }}
+          SNS_TOPIC_ARN: ${{ needs.terraform.outputs.sns_user_registered_topic_arn }}
+          HISTORY_API_URL: ${{ needs.terraform.outputs.transactions_history_api_url }}
+        run: |
+          set -euo pipefail
+          mkdir -p rendered/services rendered/frontend
+
+          cp k8s/namespace.yaml rendered/namespace.yaml
+          cp k8s/ingress.yaml rendered/ingress.yaml
+
+          sed "s#eks.amazonaws.com/role-arn:.*#eks.amazonaws.com/role-arn: \"${IRSA_ROLE_ARN}\"#" \
+            k8s/serviceaccount.yaml > rendered/serviceaccount.yaml
+
+          for f in k8s/services/*.yaml; do
+            svc=$(basename "$f" | sed -E 's/-(deployment|service)\.yaml$//')
+            placeholder="<ECR_REPO_URL_$(echo "$svc" | tr '[:lower:]-' '[:upper:]_')>:latest"
+            url=$(echo "$ECR_URLS" | jq -r --arg s "$svc" '.[$s] // empty')
+            out="rendered/services/$(basename "$f")"
+            sed \
+              -e "s#${placeholder}#${url}:${{ github.sha }}#" \
+              -e "s#<SNS_USER_REGISTERED_TOPIC_ARN>#${SNS_TOPIC_ARN}#" \
+              -e "s#<TRANSACTIONS_HISTORY_API_URL>#${HISTORY_API_URL}#" \
+              "$f" > "$out"
+          done
+
+          fe_url=$(echo "$ECR_URLS" | jq -r '.frontend')
+          sed "s#<ECR_REPO_URL_FRONTEND>:latest#${fe_url}:${{ github.sha }}#" \
+            k8s/frontend/deployment.yaml > rendered/frontend/deployment.yaml
+          cp k8s/frontend/service.yaml rendered/frontend/service.yaml
+
+      - name: Sync app-secrets (Gmail + Groq)
+        # Pulled straight from GitHub Actions secrets and written into the
+        # cluster - never written to a file in the repo, never logged.
+        # kubectl apply makes this idempotent, so re-running is safe.
+        # (Host/port/from-address for SMTP default to Gmail's in
+        # backend/common/mailer.py, so only these two SMTP values + the
+        # Groq key are needed.)
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          set -euo pipefail
+          kubectl apply -f rendered/namespace.yaml
+          kubectl create secret generic app-secrets \
+            --namespace "$NAMESPACE" \
+            --from-literal=SMTP_USER="$SMTP_USER" \
+            --from-literal=SMTP_APP_PASSWORD="$SMTP_APP_PASSWORD" \
+            --from-literal=GROQ_API_KEY="$GROQ_API_KEY" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Apply manifests
+        run: |
+          kubectl apply -f rendered/serviceaccount.yaml
+          kubectl apply -f rendered/services/
+          kubectl apply -f rendered/frontend/
+          kubectl apply -f rendered/ingress.yaml
+
+      - name: Wait for rollouts
+        run: |
+          set -euo pipefail
+          for f in rendered/services/*-deployment.yaml; do
+            name=$(basename "$f" -deployment.yaml)
+            kubectl rollout status "deployment/$name" -n "$NAMESPACE" --timeout=180s
+          done
+          kubectl rollout status deployment/frontend -n "$NAMESPACE" --timeout=180s
+
+      - name: Wait for ALB and print URL
+        run: |
+          set -euo pipefail
+          HOST=""
+          for i in $(seq 1 30); do
+            HOST=$(kubectl get ingress veerabank-ingress -n "$NAMESPACE" -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
+            [ -n "$HOST" ] && break
+            sleep 10
+          done
+          echo "### Cloud Bank is live at: http://${HOST:-<pending - check kubectl get ingress>}/" >> "$GITHUB_STEP_SUMMARY"
+
+

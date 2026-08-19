@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kyc-svc
+  namespace: veerabank
+spec:
+  type: ClusterIP
+  selector:
+    app: kyc
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP

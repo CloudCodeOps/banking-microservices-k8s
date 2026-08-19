@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fixed-deposits-svc
+  namespace: veerabank
+spec:
+  type: ClusterIP
+  selector:
+    app: fixed-deposits
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP

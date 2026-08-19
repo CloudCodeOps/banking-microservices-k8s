@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users
+  namespace: veerabank
+  labels:
+    app: users
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      serviceAccountName: backend-app
+      containers:
+        - name: users
+          # Replaced at deploy time with the real ECR image + tag (see deploy.yml)
+          image: "<ECR_REPO_URL_USERS>:latest"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: TABLE_PREFIX
+              value: "veerabank-dev"
+            - name: USER_REGISTERED_TOPIC_ARN
+              value: "<SNS_USER_REGISTERED_TOPIC_ARN>"
+            - name: TRANSACTIONS_HISTORY_API_URL
+              value: "<TRANSACTIONS_HISTORY_API_URL>"
+            # Mail (OTP + login-notification emails) - only the two secrets
+            # come from app-secrets (populated by the deploy workflow from
+            # GitHub Actions secrets). Host/port/from-address default to
+            # Gmail's in backend/common/mailer.py, so nothing else is needed.
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SMTP_USER
+            - name: SMTP_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SMTP_APP_PASSWORD
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "96Mi"
+            limits:
+              cpu: "250m"
+              memory: "192Mi"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20

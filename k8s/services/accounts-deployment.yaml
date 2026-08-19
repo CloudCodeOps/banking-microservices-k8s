@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts
+  namespace: veerabank
+  labels:
+    app: accounts
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: accounts
+  template:
+    metadata:
+      labels:
+        app: accounts
+    spec:
+      serviceAccountName: backend-app
+      containers:
+        - name: accounts
+          # Replaced at deploy time with the real ECR image + tag (see deploy.yml)
+          image: "<ECR_REPO_URL_ACCOUNTS>:latest"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: TABLE_PREFIX
+              value: "veerabank-dev"
+            - name: USERS_SERVICE_URL
+              value: "http://users-svc.veerabank.svc.cluster.local"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "96Mi"
+            limits:
+              cpu: "250m"
+              memory: "192Mi"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20

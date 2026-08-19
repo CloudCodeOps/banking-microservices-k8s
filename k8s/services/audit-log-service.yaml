@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-log-svc
+  namespace: veerabank
+spec:
+  type: ClusterIP
+  selector:
+    app: audit-log
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP

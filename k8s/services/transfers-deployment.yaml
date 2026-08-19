@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfers
+  namespace: veerabank
+  labels:
+    app: transfers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transfers
+  template:
+    metadata:
+      labels:
+        app: transfers
+    spec:
+      serviceAccountName: backend-app
+      containers:
+        - name: transfers
+          # Replaced at deploy time with the real ECR image + tag (see deploy.yml)
+          image: "<ECR_REPO_URL_TRANSFERS>:latest"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: TABLE_PREFIX
+              value: "veerabank-dev"
+            - name: TRANSACTIONS_HISTORY_API_URL
+              value: "<TRANSACTIONS_HISTORY_API_URL>"
+            - name: USERS_SERVICE_URL
+              value: "http://users-svc.veerabank.svc.cluster.local"
+            # Mail (transfer "sent"/"received" emails) - see mailer.py;
+            # without these, mail sends silently no-op (logged, not
+            # errored) so a missing secret never breaks a transfer.
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SMTP_USER
+            - name: SMTP_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SMTP_APP_PASSWORD
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "96Mi"
+            limits:
+              cpu: "250m"
+              memory: "192Mi"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20

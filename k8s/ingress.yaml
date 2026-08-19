@@ -1,0 +1,172 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: veerabank-ingress
+  namespace: veerabank
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    # Once you have an ACM cert, uncomment these and add HTTPS:443 above:
+    # alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-east-1:<ACCOUNT_ID>:certificate/<CERT_ID>"
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /accounts
+            pathType: Prefix
+            backend:
+              service:
+                name: accounts-svc
+                port:
+                  number: 80
+          - path: /transactions
+            pathType: Prefix
+            backend:
+              service:
+                name: transactions-svc
+                port:
+                  number: 80
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: users-svc
+                port:
+                  number: 80
+          - path: /transfers
+            pathType: Prefix
+            backend:
+              service:
+                name: transfers-svc
+                port:
+                  number: 80
+          - path: /cards
+            pathType: Prefix
+            backend:
+              service:
+                name: cards-svc
+                port:
+                  number: 80
+          - path: /loans
+            pathType: Prefix
+            backend:
+              service:
+                name: loans-svc
+                port:
+                  number: 80
+          - path: /payments
+            pathType: Prefix
+            backend:
+              service:
+                name: payments-svc
+                port:
+                  number: 80
+          - path: /beneficiaries
+            pathType: Prefix
+            backend:
+              service:
+                name: beneficiaries-svc
+                port:
+                  number: 80
+          - path: /statements
+            pathType: Prefix
+            backend:
+              service:
+                name: statements-svc
+                port:
+                  number: 80
+          - path: /notifications
+            pathType: Prefix
+            backend:
+              service:
+                name: notifications-svc
+                port:
+                  number: 80
+          - path: /chatbot
+            pathType: Prefix
+            backend:
+              service:
+                name: chatbot-svc
+                port:
+                  number: 80
+          - path: /kyc
+            pathType: Prefix
+            backend:
+              service:
+                name: kyc-svc
+                port:
+                  number: 80
+          - path: /fixed-deposits
+            pathType: Prefix
+            backend:
+              service:
+                name: fixed-deposits-svc
+                port:
+                  number: 80
+          - path: /cheques
+            pathType: Prefix
+            backend:
+              service:
+                name: cheques-svc
+                port:
+                  number: 80
+          - path: /disputes
+            pathType: Prefix
+            backend:
+              service:
+                name: disputes-svc
+                port:
+                  number: 80
+          - path: /audit-log
+            pathType: Prefix
+            backend:
+              service:
+                name: audit-log-svc
+                port:
+                  number: 80
+          - path: /fraud-detection
+            pathType: Prefix
+            backend:
+              service:
+                name: fraud-detection-svc
+                port:
+                  number: 80
+          - path: /support-tickets
+            pathType: Prefix
+            backend:
+              service:
+                name: support-tickets-svc
+                port:
+                  number: 80
+          - path: /rewards
+            pathType: Prefix
+            backend:
+              service:
+                name: rewards-svc
+                port:
+                  number: 80
+          - path: /admin
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-svc
+                port:
+                  number: 80
+          - path: /reports
+            pathType: Prefix
+            backend:
+              service:
+                name: reports-svc
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-svc
+                port:
+                  number: 80

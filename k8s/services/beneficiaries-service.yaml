@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: beneficiaries-svc
+  namespace: veerabank
+spec:
+  type: ClusterIP
+  selector:
+    app: beneficiaries
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP

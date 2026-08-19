@@ -1,0 +1,16 @@
+/* ============ LOANS — "Editorial Ledger" (cream broadsheet) ============ */
+#main.theme-loans, .svc-tile.theme-loans, .bigview-backdrop.theme-loans .bigview{
+  --panel:#f8f2e3; --panel-2:#f1e9d3; --line:#d9cca0; --ink:#fbf7ec;
+  --text:#231c10; --muted:#6b5b3a; --muted-2:#95835a;
+  --ledger:#8a5a20; --ledger-dim:#e9dcb8; --gold:#9c2b26; --gold-dim:#f2d9d6;
+  --danger:#9c2b26; --danger-dim:#f2d9d6; --radius:3px;
+  --display:'Playfair Display', serif; --sans:'Inter', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-loans{ background:var(--ink); }
+#main.theme-loans .card{ border-radius:3px; box-shadow:0 1px 0 var(--line); }
+#main.theme-loans .btn{ border-radius:2px; background:var(--ledger); color:#fbf7ec; }
+#main.theme-loans .msg.ok{ color:#3d5a2c; } #main.theme-loans .msg.err{ color:#7a1f1a; }
+#main.theme-loans input, #main.theme-loans select{ border-radius:2px; }
+.loans-masthead{ margin-bottom:22px; }
+.loans-masthead-rule{ border-top:2px solid var(--text); }
+.loans-masthead-row{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; letter-spacing:1.5px; padding:6px 0; color:var(--muted); }

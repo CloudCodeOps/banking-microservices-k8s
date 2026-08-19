@@ -1,0 +1,14 @@
+/* ============ SUPPORT TICKETS — "Helpdesk" (soft lavender bubbles) ============ */
+#main.theme-support-tickets, .svc-tile.theme-support-tickets, .bigview-backdrop.theme-support-tickets .bigview{
+  --panel:#f5eefb; --panel-2:#ece0f7; --line:#d8c3ec; --ink:#faf5fd;
+  --text:#2c2140; --muted:#7a6a99; --muted-2:#9c8cbd;
+  --ledger:#8b5cf6; --ledger-dim:#e6d9fa; --gold:#c084fc; --gold-dim:#efe0fb;
+  --danger:#e15a7a; --danger-dim:#f9dbe4; --radius:24px;
+  --display:'Quicksand', sans-serif; --sans:'Quicksand', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-support-tickets{ background:var(--ink); }
+#main.theme-support-tickets .card{ border-radius:24px; }
+#main.theme-support-tickets .btn{ border-radius:999px; background:var(--ledger); color:#fff; }
+#main.theme-support-tickets .msg.ok{ color:#3d5a2c; } #main.theme-support-tickets .msg.err{ color:#8c2b4a; }
+#main.theme-support-tickets input, #main.theme-support-tickets select{ border-radius:999px; padding:10px 16px; }
+.tk-bubble-intro{ background:var(--panel-2); border-radius:20px 20px 20px 4px; display:inline-block; padding:10px 18px; font-size:13px; margin-bottom:18px; }

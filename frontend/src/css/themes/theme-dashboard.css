@@ -1,0 +1,13 @@
+/* ============ DASHBOARD — "Midnight Aurora" (home overview) ============ */
+#main.theme-dashboard{
+  --panel:#101b34; --panel-2:#16233f; --line:#2a3a5e; --ink:#0a1120;
+  --text:#eef3ff; --muted:#93a2c4; --muted-2:#5e6d92;
+  --ledger:#35d6ab; --ledger-dim:#123a30; --gold:#e0b866; --gold-dim:#3c3018;
+  --danger:#ff7a68; --danger-dim:#3d1f1c; --radius:18px;
+  --display:'Fraunces', serif; --sans:'Inter', sans-serif; --mono:'IBM Plex Mono', monospace;
+  background:
+    radial-gradient(700px 360px at 12% -10%, rgba(53,214,171,.14), transparent 60%),
+    radial-gradient(600px 340px at 100% 0%, rgba(224,184,102,.12), transparent 55%);
+  border-radius:20px; padding:4px;
+}
+#main.theme-dashboard .card{ box-shadow:0 20px 50px rgba(0,0,0,.35); }

@@ -1,0 +1,8 @@
+/* ============ SERVICES HUB — directory shell (neutral, not a "server") ============ */
+#main.theme-services{
+  --panel:#111a30; --panel-2:#17223d; --line:#28375a; --ink:#0a1120;
+  --text:#eef1f8; --muted:#8b96b3; --muted-2:#5c6788;
+  --ledger:#7c9cff; --ledger-dim:#1a2440; --gold:#f5c26b; --gold-dim:#3a2f14;
+  --danger:#e8695f; --danger-dim:#3a201d; --radius:16px;
+  --display:'Fraunces', serif; --sans:'Inter', sans-serif; --mono:'IBM Plex Mono', monospace;
+}

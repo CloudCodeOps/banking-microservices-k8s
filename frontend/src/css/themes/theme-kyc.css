@@ -1,0 +1,16 @@
+/* ============ KYC — "Verify Wizard" (teal step flow) ============ */
+#main.theme-kyc, .svc-tile.theme-kyc, .bigview-backdrop.theme-kyc .bigview{
+  --panel:#0a1e1a; --panel-2:#0f2b25; --line:#1f4a41; --ink:#071512;
+  --text:#e7fbf6; --muted:#79b3a4; --muted-2:#437464;
+  --ledger:#14b8a6; --ledger-dim:#0e332d; --gold:#5eead4; --gold-dim:#123a34;
+  --danger:#ff8a80; --danger-dim:#3a1c18; --radius:12px;
+  --display:'Sora', sans-serif; --sans:'Sora', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-kyc .card{ border-radius:12px; }
+#main.theme-kyc .btn{ border-radius:10px; }
+.kyc-steps{ display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+.kyc-step{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted-2); }
+.kyc-step span{ width:24px; height:24px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:11px; }
+.kyc-step.active{ color:var(--text); }
+.kyc-step.active span{ background:var(--ledger); border-color:var(--ledger); color:#04211c; font-weight:700; }
+.kyc-step-line{ flex:1; max-width:60px; height:1px; background:var(--line); }

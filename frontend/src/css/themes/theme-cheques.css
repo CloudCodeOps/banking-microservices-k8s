@@ -1,0 +1,13 @@
+/* ============ CHEQUES — "Chequebook" (pale blue ledger paper) ============ */
+#main.theme-cheques, .svc-tile.theme-cheques, .bigview-backdrop.theme-cheques .bigview{
+  --panel:#eef4f8; --panel-2:#e2ecf2; --line:#aec7d6; --ink:#f7fbfd;
+  --text:#16324a; --muted:#4c7185; --muted-2:#7397a8;
+  --ledger:#2f6690; --ledger-dim:#d3e3ec; --gold:#c1272d; --gold-dim:#f4d6d7;
+  --danger:#c1272d; --danger-dim:#f4d6d7; --radius:6px;
+  --display:'Courier Prime', monospace; --sans:'Courier Prime', monospace; --mono:'Courier Prime', monospace;
+}
+#main.theme-cheques{ background:var(--ink); }
+#main.theme-cheques .card{ border-radius:6px; border-style:dashed; border-width:2px; position:relative; }
+#main.theme-cheques .btn{ border-radius:4px; background:var(--ledger); color:#eef4f8; }
+#main.theme-cheques .msg.ok{ color:#155a2e; } #main.theme-cheques .msg.err{ color:#8c1e22; }
+.ch-perf{ position:absolute; top:-1px; left:16px; right:16px; height:8px; background-image:radial-gradient(circle, var(--ink) 3px, transparent 3.5px); background-size:16px 8px; background-repeat:repeat-x; }

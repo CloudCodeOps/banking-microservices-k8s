@@ -1,0 +1,15 @@
+/* ============ CARDS — "Neon Vault" (glassmorphism, brighter neon) ============ */
+#main.theme-cards, .svc-tile.theme-cards, .bigview-backdrop.theme-cards .bigview{
+  --panel:#0b0f1f; --panel-2:#111832; --line:#243056; --ink:#07091a;
+  --text:#eef1ff; --muted:#93a2d0; --muted-2:#5a6796;
+  --ledger:#22e0e0; --ledger-dim:#0f2f2f; --gold:#ff5fa8; --gold-dim:#3a1029;
+  --danger:#ff5f5f; --danger-dim:#3a1414; --radius:20px;
+  --display:'Space Grotesk', sans-serif; --sans:'Inter', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-cards{
+  background:
+    radial-gradient(600px 300px at 90% -10%, rgba(255,95,168,.14), transparent 55%),
+    radial-gradient(500px 300px at 0% 100%, rgba(34,224,224,.14), transparent 55%);
+}
+.bigview-backdrop.theme-cards{ background:radial-gradient(700px 500px at 50% 20%, rgba(255,95,168,.18), rgba(4,6,12,.9)); }
+.cd-strip{ display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:1.5px; color:var(--ledger); border:1px solid var(--line); padding:7px 14px; border-radius:999px; margin-bottom:18px; }

@@ -1,0 +1,12 @@
+/* ============ FIXED DEPOSITS — "Vault Gold" (navy & gilt) ============ */
+#main.theme-fixed-deposits, .svc-tile.theme-fixed-deposits, .bigview-backdrop.theme-fixed-deposits .bigview{
+  --panel:#0c1226; --panel-2:#121a35; --line:#2b3a63; --ink:#080c1a;
+  --text:#f3ecd8; --muted:#a99a6e; --muted-2:#6f6444;
+  --ledger:#d4af37; --ledger-dim:#3a2e10; --gold:#f0d27a; --gold-dim:#3a2e10;
+  --danger:#e8695f; --danger-dim:#3a201d; --radius:16px;
+  --display:'Cormorant Garamond', serif; --sans:'Inter', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-fixed-deposits{ background:radial-gradient(600px 300px at 90% -10%, rgba(212,175,55,.14), transparent 55%); }
+#main.theme-fixed-deposits .card{ border-radius:16px; border-color:rgba(212,175,55,.25); }
+#main.theme-fixed-deposits .btn{ background:linear-gradient(180deg,#e8cf82,#c9a24b); color:#241d09; }
+.fd-seal{ display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:1.5px; color:#241d09; background:linear-gradient(180deg,#e8cf82,#c9a24b); padding:8px 16px; border-radius:999px; margin-bottom:18px; }

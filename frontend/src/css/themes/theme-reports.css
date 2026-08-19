@@ -1,0 +1,13 @@
+/* ============ REPORTS — "Analytics Studio" (light, chart-forward) ============ */
+#main.theme-reports, .svc-tile.theme-reports, .bigview-backdrop.theme-reports .bigview{
+  --panel:#f6f7fb; --panel-2:#eceefa; --line:#dde1f2; --ink:#ffffff;
+  --text:#1b2233; --muted:#6b7390; --muted-2:#8f96b3;
+  --ledger:#4338ca; --ledger-dim:#e3e1fb; --gold:#06b6d4; --gold-dim:#d7f4f9;
+  --danger:#dc2626; --danger-dim:#fbdada; --radius:14px;
+  --display:'Manrope', sans-serif; --sans:'Manrope', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-reports{ background:var(--ink); }
+#main.theme-reports .card{ border-radius:14px; box-shadow:0 8px 24px rgba(30,40,90,.06); }
+#main.theme-reports .btn{ border-radius:10px; background:var(--ledger); color:#fff; }
+.rp-strip{ display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:1.5px; color:var(--ledger); background:var(--ledger-dim); padding:7px 14px; border-radius:8px; margin-bottom:18px; }
+#main.theme-reports .msg.ok{ color:#26206e; } #main.theme-reports .msg.err{ color:#7a1518; }

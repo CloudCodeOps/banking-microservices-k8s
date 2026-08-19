@@ -1,0 +1,18 @@
+.svc-tile{
+  text-align:left; cursor:pointer; border:1px solid var(--line); transition:transform .18s, box-shadow .18s, border-color .18s;
+  display:flex; flex-direction:column; gap:2px;
+}
+.svc-tile:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:0 26px 60px -28px var(--accent);}
+.svc-tile:active{transform:translateY(-1px);}
+.svc-tile .icon{
+  width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  font-size:19px; color:#050308; background:linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, white 15%));
+  margin-bottom:6px;
+}
+.svc-tile .icon svg{width:22px; height:22px; flex:none;}
+.svc-tile h2{text-transform:capitalize; margin-top:6px;}
+.svc-tile p{margin:0;}
+
+.stat-tile{padding:18px 20px;}
+.stat-tile .label{font-size:10.5px; color:var(--muted-2); letter-spacing:1px; font-weight:700;}
+.stat-tile .value{font-family:var(--mono); font-size:21px; margin-top:6px; font-weight:600;}

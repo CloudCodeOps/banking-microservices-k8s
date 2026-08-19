@@ -1,0 +1,94 @@
+.card-wall{display:flex; gap:26px; flex-wrap:wrap; margin-bottom:8px;}
+
+.vcard-scene{width:360px; max-width:100%; height:222px; perspective:1600px;}
+.vcard{
+  position:relative; width:100%; height:100%; cursor:pointer;
+  transform-style:preserve-3d; transition:transform .7s cubic-bezier(.2,.9,.2,1);
+}
+.vcard.flipped{transform:rotateY(180deg);}
+.vcard-face{
+  position:absolute; inset:0; border-radius:22px; backface-visibility:hidden;
+  padding:22px 24px; display:flex; flex-direction:column; justify-content:space-between;
+  box-shadow:0 26px 60px -20px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08);
+  overflow:hidden; border:1px solid rgba(255,255,255,.08);
+}
+.vcard-face.front{
+  background:
+    radial-gradient(460px 220px at 100% 0%, color-mix(in srgb, var(--violet) 45%, transparent), transparent 60%),
+    radial-gradient(340px 240px at 0% 100%, color-mix(in srgb, var(--ledger) 35%, transparent), transparent 60%),
+    linear-gradient(155deg, #16121f, #08070d 75%);
+  color:#f6f5fc;
+}
+.vcard-face.front.credit{
+  background:
+    radial-gradient(460px 220px at 100% 0%, color-mix(in srgb, var(--gold) 45%, transparent), transparent 60%),
+    radial-gradient(340px 240px at 0% 100%, color-mix(in srgb, var(--danger) 30%, transparent), transparent 60%),
+    linear-gradient(155deg, #1f1512, #08070d 75%);
+}
+.vcard-face.back{
+  background:linear-gradient(155deg, #16121f, #08070d 75%); color:#f6f5fc; transform:rotateY(180deg);
+}
+.vcard-face::after{
+  content:""; position:absolute; inset:0; opacity:.06; pointer-events:none;
+  background-image:repeating-linear-gradient(115deg, #fff 0 1px, transparent 1px 30px);
+}
+
+.vcard-top{display:flex; justify-content:space-between; align-items:flex-start;}
+.vcard-bank{font-family:var(--display); font-size:16px; font-weight:600; letter-spacing:.3px;}
+.vcard-bank b{background:linear-gradient(90deg, var(--violet), var(--ledger)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.vcard-type{font-size:9.5px; letter-spacing:1.6px; text-transform:uppercase; font-weight:700; color:var(--gold); border:1px solid rgba(255,182,72,.5); padding:4px 9px; border-radius:999px;}
+
+.vcard-chip{
+  width:42px; height:32px; border-radius:8px; margin-top:8px;
+  background:linear-gradient(155deg, #ffe9ad, #d8ab4e);
+  position:relative;
+}
+.vcard-chip::before, .vcard-chip::after{content:""; position:absolute; background:rgba(0,0,0,.3); left:7px; right:7px; height:1px;}
+.vcard-chip::before{top:10px;} .vcard-chip::after{top:21px;}
+
+.vcard-number{font-family:var(--mono); font-size:20px; letter-spacing:3px; margin-top:12px; display:flex; align-items:center; gap:12px;}
+.vcard-reveal-btn{
+  background:var(--panel); border:1px solid var(--line); color:var(--muted); border-radius:10px;
+  width:28px; height:28px; font-size:12px; cursor:pointer; flex:none; display:flex; align-items:center; justify-content:center; transition:.15s;
+}
+.vcard-reveal-btn:hover{color:var(--accent); border-color:var(--accent);}
+
+.vcard-bottom{display:flex; justify-content:space-between; align-items:flex-end;}
+.vcard-holder{font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted-2); font-weight:700;}
+.vcard-holder .name{font-size:13.5px; color:#f6f5fc; letter-spacing:.6px; margin-top:4px; text-transform:none; font-family:var(--sans); font-weight:700;}
+.vcard-expiry{font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted-2); text-align:right; font-weight:700;}
+.vcard-expiry .val{font-family:var(--mono); font-size:13.5px; color:#f6f5fc; margin-top:4px;}
+.vcard-network{font-family:var(--display); font-weight:700; font-size:21px; background:linear-gradient(90deg, var(--violet), var(--ledger)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+
+.vcard-stripe{height:42px; background:#0a0a0a; margin:16px -24px 0;}
+.vcard-cvv-strip{display:flex; justify-content:flex-end; align-items:center; margin-top:16px; gap:10px;}
+.vcard-cvv-panel{background:#f4f1ea; color:#141014; border-radius:8px; padding:9px 15px; font-family:var(--mono); font-size:13px; letter-spacing:2px; min-width:64px; text-align:right; font-weight:700;}
+.vcard-cvv-label{font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted-2); font-weight:700;}
+.vcard-back-note{margin-top:18px; font-size:9.5px; color:var(--muted-2); line-height:1.6;}
+
+.vcard-status-flag{
+  position:absolute; top:16px; right:16px; font-size:9px; letter-spacing:1.2px; text-transform:uppercase; font-weight:700;
+  background:var(--danger-dim); color:#ffb0ba; border:1px solid rgba(255,92,114,.4); padding:4px 9px; border-radius:999px;
+}
+.vcard-scene.frozen .vcard-face{filter:grayscale(.65) brightness(.7);}
+
+.vcard-meta-row{display:flex; justify-content:space-between; align-items:center; margin-top:14px; gap:8px;}
+
+/* -------- Big-screen "View" modal -------- */
+.card-view-backdrop{
+  position:fixed; inset:0; z-index:250; display:flex; align-items:center; justify-content:center;
+  background:rgba(4,3,8,.86); backdrop-filter:blur(10px); padding:30px;
+}
+.card-view-inner{position:relative; width:min(680px, 92vw);}
+.card-view-inner .vcard-scene{width:100%; height:min(46vw, 420px); max-height:420px;}
+.card-view-inner .vcard-face{border-radius:30px; padding:36px 40px;}
+.card-view-inner .vcard-number{font-size:28px; letter-spacing:4px; margin-top:20px;}
+.card-view-inner .vcard-bank{font-size:20px;}
+.card-view-inner .vcard-chip{width:54px; height:40px;}
+.card-view-inner .vcard-holder .name{font-size:16px;}
+.card-view-inner .vcard-expiry .val{font-size:16px;}
+.card-view-close{
+  position:absolute; top:-46px; right:0; width:34px; height:34px; border-radius:50%;
+  background:var(--panel); border:1px solid var(--line); color:var(--text); cursor:pointer; font-size:15px;
+}
+.card-view-actions{display:flex; justify-content:center; gap:10px; margin-top:22px;}

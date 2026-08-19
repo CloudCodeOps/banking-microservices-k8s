@@ -1,0 +1,16 @@
+/* ============ AUDIT LOG — "Blackbox Terminal" (amber phosphor) ============ */
+#main.theme-audit-log, .svc-tile.theme-audit-log, .bigview-backdrop.theme-audit-log .bigview{
+  --panel:#000000; --panel-2:#0a0a0a; --line:#332400; --ink:#000000;
+  --text:#ffb000; --muted:#8a6200; --muted-2:#5c4200;
+  --ledger:#ffb000; --ledger-dim:#2a1e00; --gold:#ffcc66; --gold-dim:#2a2000;
+  --danger:#ff5f5f; --danger-dim:#3a1414; --radius:0px;
+  --display:'JetBrains Mono', monospace; --sans:'JetBrains Mono', monospace; --mono:'JetBrains Mono', monospace;
+}
+#main.theme-audit-log .card{ border-radius:0; }
+#main.theme-audit-log .al-crt{ position:relative; overflow:hidden; }
+.al-scanline{ position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(255,176,0,.04) 0 2px, transparent 2px 4px); }
+.al-line{ padding:8px 0; border-bottom:1px dashed var(--line); font-size:12.5px; }
+.al-caret{ color:var(--ledger); font-weight:700; }
+.al-action{ text-transform:uppercase; letter-spacing:.5px; }
+.al-when{ float:right; color:var(--muted-2); }
+.al-details{ clear:both; font-size:10.5px; color:var(--muted); margin-top:3px; word-break:break-all; }

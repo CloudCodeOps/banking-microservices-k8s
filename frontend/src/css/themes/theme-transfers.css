@@ -1,0 +1,14 @@
+/* ============ TRANSFERS — "Flux" (kinetic violet/cyan) ============ */
+#main.theme-transfers{
+  --panel:#160f2e; --panel-2:#1d1440; --line:#372a5e; --ink:#0d0920;
+  --text:#f2eeff; --muted:#a89bd0; --muted-2:#6c5c9c;
+  --ledger:#9b6bff; --ledger-dim:#2a1a4d; --gold:#22d3ee; --gold-dim:#123138;
+  --danger:#ff5f8a; --danger-dim:#3d1a29; --radius:22px;
+  --display:'Space Grotesk', sans-serif; --sans:'Inter', sans-serif; --mono:'JetBrains Mono', monospace;
+  background:
+    linear-gradient(120deg, rgba(155,107,255,.14), transparent 45%),
+    linear-gradient(300deg, rgba(34,211,238,.12), transparent 50%);
+}
+#main.theme-transfers .card{ border-radius:22px; }
+#main.theme-transfers .btn{ border-radius:999px; padding:12px 24px; }
+#main.theme-transfers input, #main.theme-transfers select{ border-radius:999px; padding:10px 16px; }

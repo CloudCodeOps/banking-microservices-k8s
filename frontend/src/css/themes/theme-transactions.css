@@ -1,0 +1,12 @@
+/* ============ TRANSACTIONS — "Ledger Noir" (newspaper on black) ============ */
+#main.theme-transactions{
+  --panel:#0d0d0d; --panel-2:#141414; --line:#333333; --ink:#000000;
+  --text:#f2f2f2; --muted:#a3a3a3; --muted-2:#6e6e6e;
+  --ledger:#8fbf8f; --ledger-dim:#1c2e1c; --gold:#cfcfcf; --gold-dim:#2a2a2a;
+  --danger:#d9534f; --danger-dim:#3a1e1c; --radius:2px;
+  --display:'DM Serif Display', serif; --sans:'IBM Plex Mono', monospace; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-transactions .card{ border-radius:2px; border-width:1px; border-style:double; border-width:3px; }
+#main.theme-transactions .pagetitle{ letter-spacing:-.5px; border-bottom:3px double var(--line); padding-bottom:10px; }
+#main.theme-transactions .btn{ border-radius:0; }
+#main.theme-transactions input, #main.theme-transactions select{ border-radius:0; }

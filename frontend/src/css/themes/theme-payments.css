@@ -1,0 +1,15 @@
+/* ============ PAYMENTS — "Terminal Ledger" (phosphor green CRT) ============ */
+#main.theme-payments, .svc-tile.theme-payments, .bigview-backdrop.theme-payments .bigview{
+  --panel:#020803; --panel-2:#04120a; --line:#164025; --ink:#000000;
+  --text:#b9ffb9; --muted:#5fae5f; --muted-2:#3a7a3a;
+  --ledger:#39ff6a; --ledger-dim:#0b2e15; --gold:#ffd166; --gold-dim:#3a2c0c;
+  --danger:#ff5f5f; --danger-dim:#3a1414; --radius:4px;
+  --display:'JetBrains Mono', monospace; --sans:'JetBrains Mono', monospace; --mono:'JetBrains Mono', monospace;
+}
+#main.theme-payments{ background:repeating-linear-gradient(0deg, rgba(57,255,106,.03) 0 2px, transparent 2px 4px); }
+#main.theme-payments .card{ border-radius:4px; box-shadow:0 0 24px rgba(57,255,106,.06) inset; }
+#main.theme-payments .pagetitle{ text-shadow:0 0 10px rgba(57,255,106,.5); }
+#main.theme-payments .btn{ border-radius:3px; text-transform:uppercase; letter-spacing:1px; }
+.pay-term-bar{ display:flex; align-items:center; gap:8px; margin-bottom:16px; background:#04120a; border:1px solid var(--line); border-radius:8px; padding:8px 12px; }
+.pay-dot{ width:9px; height:9px; border-radius:50%; background:var(--line); }
+.pay-path{ margin-left:8px; font-family:var(--mono); font-size:12px; color:var(--muted); }

@@ -1,0 +1,13 @@
+/* ============ REWARDS — "Arcade" (bright playful gradient) ============ */
+#main.theme-rewards, .svc-tile.theme-rewards, .bigview-backdrop.theme-rewards .bigview{
+  --panel:#1c1030; --panel-2:#26163f; --line:#402a63; --ink:#120a20;
+  --text:#fff0fb; --muted:#c9a8e0; --muted-2:#8a6ab0;
+  --ledger:#ff5cae; --ledger-dim:#3a1230; --gold:#ffd23f; --gold-dim:#3a2c08;
+  --danger:#ff6b6b; --danger-dim:#3a1616; --radius:26px;
+  --display:'Baloo 2', sans-serif; --sans:'Baloo 2', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-rewards{ background:radial-gradient(600px 320px at 10% -10%, rgba(255,92,174,.18), transparent 55%), radial-gradient(500px 300px at 100% 100%, rgba(255,210,63,.14), transparent 55%); }
+#main.theme-rewards .card{ border-radius:26px; }
+#main.theme-rewards .btn{ background:linear-gradient(90deg,#ff5cae,#ffd23f); color:#1c1030; font-weight:700; }
+.rw-badge-row{ font-size:22px; letter-spacing:6px; color:var(--gold); }
+.rw-glow{ box-shadow:0 0 40px rgba(255,92,174,.15); }

@@ -1,0 +1,54 @@
+/* ---------------- Support chatbot widget ---------------- */
+#chat-widget-root{position:fixed; right:22px; bottom:22px; z-index:200;}
+
+.chat-fab{
+  width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
+  background:linear-gradient(135deg, var(--violet), var(--ledger));
+  color:#050308; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transition:transform .15s ease;
+}
+.chat-fab:hover{transform:scale(1.06);}
+.chat-fab svg{width:24px; height:24px;}
+
+.chat-panel{
+  position:absolute; right:0; bottom:66px; width:340px; max-width:calc(100vw - 32px);
+  height:460px; max-height:70vh; border:1px solid var(--line);
+  border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,.55); overflow:hidden;
+  display:flex; flex-direction:column;
+  /* Solid, not the usual translucent --panel: this floats directly over
+     page content (no full-screen backdrop behind it like a modal has),
+     so a low-alpha background would just look see-through here. */
+  background:linear-gradient(155deg, #16141f, #0c0b12);
+}
+.chat-head{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:14px 16px; border-bottom:1px solid var(--line); background:#161420;
+}
+.chat-title{font-family:var(--display); font-weight:700; font-size:13.5px;}
+.chat-sub{font-size:11px; color:var(--muted-2); margin-top:2px;}
+.chat-close{background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; padding:4px;}
+.chat-close:hover{color:var(--danger);}
+
+.chat-body{flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px;}
+.chat-msg{display:flex;}
+.chat-msg.user{justify-content:flex-end;}
+.chat-msg.bot{justify-content:flex-start;}
+.chat-msg .bubble{
+  max-width:80%; padding:9px 13px; border-radius:14px; font-size:12.5px; line-height:1.45;
+  white-space:pre-wrap; word-break:break-word;
+}
+.chat-msg.user .bubble{background:linear-gradient(120deg, var(--accent), color-mix(in srgb, var(--accent) 60%, white 10%)); color:#050308; border-bottom-right-radius:4px;}
+.chat-msg.bot .bubble{background:#1c1a27; border:1px solid var(--line); color:var(--text); border-bottom-left-radius:4px;}
+.chat-msg.bot.typing .bubble{color:var(--muted-2); font-style:italic;}
+
+.chat-input-row{display:flex; gap:8px; padding:12px; border-top:1px solid var(--line); background:#161420;}
+.chat-input-row input{
+  flex:1; background:var(--bg); border:1px solid var(--line); border-radius:10px;
+  padding:9px 11px; font-size:12.5px; color:var(--text);
+}
+.chat-input-row input:focus{outline:none; border-color:var(--accent);}
+
+@media (max-width: 480px){
+  .chat-panel{width:calc(100vw - 24px); right:-6px;}
+}

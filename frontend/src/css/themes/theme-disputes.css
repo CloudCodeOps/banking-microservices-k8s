@@ -1,0 +1,11 @@
+/* ============ DISPUTES — "Case File" (manila folder) ============ */
+#main.theme-disputes, .svc-tile.theme-disputes, .bigview-backdrop.theme-disputes .bigview{
+  --panel:#241b14; --panel-2:#2e2219; --line:#4a3826; --ink:#1a130d;
+  --text:#f2e6d8; --muted:#b39a7d; --muted-2:#7a6650;
+  --ledger:#d0393b; --ledger-dim:#3a1516; --gold:#e0a458; --gold-dim:#3a2c14;
+  --danger:#d0393b; --danger-dim:#3a1516; --radius:4px;
+  --display:'Space Grotesk', sans-serif; --sans:'Space Grotesk', sans-serif; --mono:'IBM Plex Mono', monospace;
+}
+#main.theme-disputes .card{ border-radius:4px 14px 4px 4px; }
+#main.theme-disputes .btn{ background:var(--ledger); border-radius:4px; }
+.ds-folder-tab{ display:inline-block; background:var(--ledger); color:#fdf3e7; font-size:11px; letter-spacing:1.5px; padding:8px 16px; border-radius:6px 6px 0 0; margin-bottom:0; position:relative; top:2px; }

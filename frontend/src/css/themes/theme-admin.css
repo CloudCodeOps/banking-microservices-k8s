@@ -1,0 +1,12 @@
+/* ============ ADMIN — "Ops Command" (slate control room) ============ */
+#main.theme-admin, .svc-tile.theme-admin, .bigview-backdrop.theme-admin .bigview{
+  --panel:#0b1116; --panel-2:#111a21; --line:#233039; --ink:#070b0e;
+  --text:#d7e4ec; --muted:#7f95a3; --muted-2:#516371;
+  --ledger:#22d3ee; --ledger-dim:#0e2c33; --gold:#f59e0b; --gold-dim:#3a2a0a;
+  --danger:#ef4444; --danger-dim:#3a1414; --radius:6px;
+  --display:'Chakra Petch', sans-serif; --sans:'Chakra Petch', sans-serif; --mono:'JetBrains Mono', monospace;
+}
+#main.theme-admin{ background-image:linear-gradient(rgba(34,211,238,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.05) 1px, transparent 1px); background-size:22px 22px; }
+#main.theme-admin .card{ border-radius:6px; }
+#main.theme-admin .btn{ border-radius:4px; text-transform:uppercase; font-size:11.5px; letter-spacing:1px; }
+.ad-strip{ font-family:var(--mono); font-size:11px; letter-spacing:1.5px; color:var(--ledger); border:1px solid var(--line); display:inline-block; padding:7px 14px; border-radius:4px; margin-bottom:18px; }

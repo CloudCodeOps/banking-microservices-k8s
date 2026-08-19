@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cloud Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/dashboard.css">
+<link rel="stylesheet" href="/css/cards.css">
+<link rel="stylesheet" href="/css/services.css">
+<link rel="stylesheet" href="/css/service-layouts.css">
+<link rel="stylesheet" href="/css/chatbot.css">
+<link rel="stylesheet" href="/css/print.css">
+</head>
+<body>
+
+<div class="aurora-bg" aria-hidden="true">
+  <div class="aurora a1"></div>
+  <div class="aurora a2"></div>
+  <div class="aurora a3"></div>
+  <div class="grain"></div>
+</div>
+
+<div id="app"></div>
+<div class="toast-wrap" id="toasts"></div>
+
+<!-- GSAP powers every transition/reveal in this UI -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- Used only for the "download receipt" PDF button in js/receipt.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+
+<script src="/js/api.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/onboarding.js"></script>
+<script src="/js/receipt.js"></script>
+<script src="/js/profile.js"></script>
+<script src="/js/chatbot.js"></script>
+<script src="/js/shell.js"></script>
+<script src="/js/dashboard.js"></script>
+<script src="/js/accounts.js"></script>
+<script src="/js/transactions.js"></script>
+<script src="/js/transfers.js"></script>
+
+<!-- Each service page is its own file with its own layout pattern -->
+<script src="/js/services/cards.js"></script>
+<script src="/js/services/loans.js"></script>
+<script src="/js/services/payments.js"></script>
+<script src="/js/services/beneficiaries.js"></script>
+<script src="/js/services/statements.js"></script>
+<script src="/js/services/notifications.js"></script>
+<script src="/js/services/kyc.js"></script>
+<script src="/js/services/fixed-deposits.js"></script>
+<script src="/js/services/cheques.js"></script>
+<script src="/js/services/disputes.js"></script>
+<script src="/js/services/audit-log.js"></script>
+<script src="/js/services/fraud-detection.js"></script>
+<script src="/js/services/support-tickets.js"></script>
+<script src="/js/services/rewards.js"></script>
+<script src="/js/services/admin.js"></script>
+<script src="/js/services/reports.js"></script>
+<script src="/js/services/hub.js"></script>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

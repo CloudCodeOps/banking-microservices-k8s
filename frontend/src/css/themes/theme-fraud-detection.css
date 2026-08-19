@@ -1,0 +1,13 @@
+/* ============ FRAUD DETECTION — "Red Alert" (radar console) ============ */
+#main.theme-fraud-detection, .svc-tile.theme-fraud-detection, .bigview-backdrop.theme-fraud-detection .bigview{
+  --panel:#190909; --panel-2:#210c0c; --line:#4a1717; --ink:#0d0505;
+  --text:#ffece6; --muted:#c98a80; --muted-2:#875a53;
+  --ledger:#ff3b30; --ledger-dim:#3a1210; --gold:#ff8a65; --gold-dim:#3a1f10;
+  --danger:#ff3b30; --danger-dim:#3a1210; --radius:8px;
+  --display:'Space Grotesk', sans-serif; --sans:'Space Grotesk', sans-serif; --mono:'JetBrains Mono', monospace;
+}
+#main.theme-fraud-detection{ background:radial-gradient(500px 260px at 90% 0%, rgba(255,59,48,.14), transparent 55%); }
+#main.theme-fraud-detection .card{ border-radius:8px; border-color:rgba(255,59,48,.25); }
+.fr-radar{ display:flex; align-items:center; gap:10px; font-size:11px; letter-spacing:1.5px; color:var(--muted); margin-bottom:18px; }
+.fr-pulse{ width:10px; height:10px; border-radius:50%; background:var(--ledger); box-shadow:0 0 0 0 rgba(255,59,48,.6); animation:frPulse 1.6s infinite; }
+@keyframes frPulse{ 0%{box-shadow:0 0 0 0 rgba(255,59,48,.55);} 70%{box-shadow:0 0 0 12px rgba(255,59,48,0);} 100%{box-shadow:0 0 0 0 rgba(255,59,48,0);} }

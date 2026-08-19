@@ -72,7 +72,7 @@ resource "aws_rds_cluster" "users" {
 
   storage_encrypted      = true
   skip_final_snapshot    = true
-  backup_retention_period = 7
+  backup_retention_period = 1
 
   # NOTE: no serverlessv2_scaling_configuration here on purpose. This runs
   # in the Pluralsight AWS sandbox, whose org-level SCP explicitly denies
@@ -87,7 +87,7 @@ resource "aws_rds_cluster" "users" {
 resource "aws_rds_cluster_instance" "writer" {
   identifier          = "${var.project_name}-${var.environment}-users-db-writer"
   cluster_identifier  = aws_rds_cluster.users.id
-  instance_class      = "db.t3.medium"
+  instance_class      = "db.t3.micro"
   engine              = aws_rds_cluster.users.engine
   engine_version      = aws_rds_cluster.users.engine_version
   promotion_tier      = 0
@@ -101,7 +101,7 @@ resource "aws_rds_cluster_instance" "writer" {
 resource "aws_rds_cluster_instance" "reader" {
   identifier          = "${var.project_name}-${var.environment}-users-db-reader"
   cluster_identifier  = aws_rds_cluster.users.id
-  instance_class      = "db.t3.medium"
+  instance_class      = "db.t3.micro"
   engine              = aws_rds_cluster.users.engine
   engine_version      = aws_rds_cluster.users.engine_version
   promotion_tier      = 1

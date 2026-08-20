@@ -68,9 +68,9 @@ resource "aws_db_instance" "users" {
 
   # No engine_version pinned on purpose so AWS can use the current
   # supported default MySQL version for the region/account.
-  database_name = "veerabank_users"
-  username      = "veerabank_admin"
-  password      = random_password.db_master.result
+  db_name = "veerabank_users"
+  master_username         = "veerabank_admin"
+  master_password         = random_password.db_master.result
 
   port = 3306
 

@@ -42,8 +42,8 @@ resource "aws_security_group" "users_db" {
 
   ingress {
     description     = "MySQL from the users-db-sync Lambda"
-    from_port        = 3306
-    to_port          = 3306
+    from_port        = 5432
+    to_port          = 5432
     protocol         = "tcp"
     security_groups  = [aws_security_group.users_db_sync_lambda.id]
   }
@@ -58,7 +58,7 @@ resource "aws_security_group" "users_db" {
 
 resource "aws_rds_cluster" "users" {
   cluster_identifier     = "${var.project_name}-${var.environment}-users-db"
-  engine                 = "aurora-mysql"
+  engine                 = "aurora-postgresql"
   engine_mode            = "provisioned"
   # No engine_version pinned on purpose: Aurora MySQL minor versions get
   # retired periodically, and a hardcoded one (e.g. 3.07.1) will eventually
@@ -154,7 +154,7 @@ resource "aws_s3_object" "users_db_creds" {
     # Read-only callers should use this instead - it load-balances across
     # every reader instance in the cluster (aws_rds_cluster_instance.reader).
     reader_host = aws_rds_cluster.users.reader_endpoint
-    port        = 3306
+    port        = 5432
     dbname      = aws_rds_cluster.users.database_name
   })
 

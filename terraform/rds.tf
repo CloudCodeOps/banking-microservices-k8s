@@ -170,31 +170,3 @@ resource "aws_iam_policy" "users_db_secret_access" {
     ]
   })
 }
-```
-
-### What changed from your file
-
-Only these functional changes:
-
-* `aws_db_instance.users` is now a proper **regular MySQL RDS instance**.
-* Removed `cluster_identifier`.
-* Removed `engine_mode`.
-* Added `instance_class = "db.t3.micro"`.
-* Removed the Aurora `writer` and `reader` resources.
-* S3 credentials now use:
-
-  * `aws_db_instance.users.address`
-  * `aws_db_instance.users.port`
-  * `aws_db_instance.users.db_name`
-* Removed the Aurora `reader_host`.
-* S3 object now depends directly on `aws_db_instance.users`.
-
-After replacing the file, run:
-
-```bash
-terraform fmt rds.tf
-terraform validate
-terraform plan
-```
-
-The important thing to verify in the plan is that Terraform is creating **`aws_db_instance.users`** and is no longer trying to create **`aws_rds_cluster.users`** or either Aurora cluster instance.

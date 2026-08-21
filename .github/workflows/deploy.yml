@@ -162,20 +162,20 @@ jobs:
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 
-      - name: Build & push every image
-  env:
-    ECR_URLS: ${{ needs.terraform.outputs.ecr_repository_urls }}
-  run: |
-    set -euo pipefail
-    echo "$ECR_URLS" | jq -r 'keys[]' | while read -r svc; do
-      url=$(echo "$ECR_URLS" | jq -r --arg s "$svc" '.[$s]')
+           - name: Build & push every image
+        env:
+          ECR_URLS: ${{ needs.terraform.outputs.ecr_repository_urls }}
+        run: |
+          set -euo pipefail
+          echo "$ECR_URLS" | jq -r 'keys[]' | while read -r svc; do
+            url=$(echo "$ECR_URLS" | jq -r --arg s "$svc" '.[$s]')
             if [ "$svc" = "frontend" ]; then
               docker build -f frontend/Dockerfile -t "$url:${{ github.sha }}" frontend
             else
               docker build -f "backend/services/$svc/Dockerfile" -t "$url:${{ github.sha }}" backend
             fi
             docker push "$url:${{ github.sha }}"
-    done
+          done
 
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --region "$AWS_REGION" --name "${{ needs.terraform.outputs.eks_cluster_name }}"

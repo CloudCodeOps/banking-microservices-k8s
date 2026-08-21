@@ -169,12 +169,12 @@ jobs:
     set -euo pipefail
     echo "$ECR_URLS" | jq -r 'keys[]' | while read -r svc; do
       url=$(echo "$ECR_URLS" | jq -r --arg s "$svc" '.[$s]')
-      if [ "$svc" = "frontend" ]; then
-        docker build -f frontend/Dockerfile -t "$url:${{ github.sha }}" frontend
-      else
-        docker build -f "backend/services/$svc/Dockerfile" -t "$url:${{ github.sha }}" backend
-      fi
-      docker push "$url:${{ github.sha }}"
+            if [ "$svc" = "frontend" ]; then
+              docker build -f frontend/Dockerfile -t "$url:${{ github.sha }}" frontend
+            else
+              docker build -f "backend/services/$svc/Dockerfile" -t "$url:${{ github.sha }}" backend
+            fi
+            docker push "$url:${{ github.sha }}"
     done
 
       - name: Update kubeconfig

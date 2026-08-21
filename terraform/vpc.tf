@@ -13,8 +13,14 @@ data "aws_vpcs" "existing" {
   }
 }
 
+variable "use_existing_vpc" {
+  description = "Set to true only if pointing at a VPC not managed by this Terraform config"
+  type        = bool
+  default     = false
+}
+
 locals {
-  vpc_already_exists = length(data.aws_vpcs.existing.ids) > 0
+  vpc_already_exists = var.use_existing_vpc
 }
 
 module "vpc" {
